@@ -6,16 +6,26 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes'); // Import only router
 const transactionRoutes = require('./routes/transactionRoutes');
 const contactRoutes = require('./routes/contactRoutes'); // Adjust the path as needed
+const authMiddleware = require('./routes/authMiddleware');
+const financeRoute = require('./routes/financeRoutes') 
+const incomeRoutes = require('./routes/incomeRoutes');
+
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors()); //frontend give accses 
 app.use(express.json()); // Use express.json() instead of body-parser
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/transactions', transactionRoutes);
+// app.use('/api/transactions', transactionRoutes,authMiddleware);
 app.use('/api/contact', contactRoutes);
+// server.js
+app.use('/api/transactions', transactionRoutes , authMiddleware);
+app.use("/api/finance", financeRoute);
+app.use('/api/income', incomeRoutes);
+
+
 
 // MongoDB Connection
 mongoose
@@ -23,6 +33,7 @@ mongoose
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
+  
 // Start Server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

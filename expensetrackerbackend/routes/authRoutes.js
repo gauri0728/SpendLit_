@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
+const Transaction = require('../models/Transaction'); // Ensure the Transaction model is imported
+
 
 const router = express.Router();
 
@@ -59,10 +61,19 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
+
+      // Check if the user is new (based on createdAt and updatedAt)
+    // const isNewUser = user._id
+
+    // // Return the token and whether it's a new user
+    // return res.json({ token, isNewUser });
+
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
   }
 });
 
-module.exports = router; // Correctly export only the router
+
+module.exports = router;

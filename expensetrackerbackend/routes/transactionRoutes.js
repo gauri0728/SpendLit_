@@ -1,18 +1,36 @@
 const express = require('express');
 const Transaction = require('../models/Transaction');
-
 const router = express.Router();
+const jwt = require('jsonwebtoken'); // Include this if not already imported
 
-// Add a new transaction
 router.post('/', async (req, res) => {
-  const { title, amount, category, description, type, date } = req.body;
+  // const token = req.headers.authorization?.split(' ')[1]; // Extract token from headers
+  // if (!token) {
+  //   return res.status(401).json({ msg: 'Unauthorized: No token provided' });
+  // }
+
   try {
-    const newTransaction = new Transaction({ title, amount, category, description, type, date });
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET); // Decode the token
+    // const userId = decoded.id; // Extract userId from the token
+
+    const { title, amount, category, description, type, date } = req.body;
+
+    const newTransaction = new Transaction({
+      title,
+      amount,
+      category,
+      description,
+      type,
+      date,
+    });
+
     await newTransaction.save();
+
+    console.log(req.body, newTransaction);
+
     res.status(201).json({
       msg: 'Transaction added successfully',
       transaction: {
-        id: newTransaction._id,
         title: newTransaction.title,
         type: newTransaction.type,
         amount: newTransaction.amount,
@@ -27,10 +45,40 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all transactions
+
+
+// // Add a new transaction
+// router.post('/', async (req, res) => {
+//   const { title, amount, category, description, type, date, userId } = req.body; // Include userId
+
+//   try {
+//     const newTransaction = new Transaction({ title, amount, category, description, type, date, userId });
+//     await newTransaction.save();
+//     console.log(req.body , newTransaction);
+    
+//     res.status(201).json({
+//       msg: 'Transaction added successfully',
+//       transaction: {
+//         id: newTransaction._id.toString(),
+//         title: newTransaction.title,
+//         type: newTransaction.type,
+//         amount: newTransaction.amount,
+//         category: newTransaction.category,
+//         description: newTransaction.description,
+//         date: newTransaction.date,
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ msg: 'Server error' });
+//   }
+// });
+
+// Get all transactions for a user
 router.get('/', async (req, res) => {
+  const { userId } = req.query; // Get the userId from the query parameters
   try {
-    const transactions = await Transaction.find().sort({ date: -1 });
+    const transactions = await Transaction.find({ userId }).sort({ date: -1 });
     res.json(transactions);
   } catch (err) {
     console.error(err);
@@ -41,15 +89,13 @@ router.get('/', async (req, res) => {
 // Edit a transaction
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, amount, category, description, type, date } = req.body;
-  console.log(req.body);
-  
+  const { title, amount, category, description, type, date, userId } = req.body;
 
   try {
     const updatedTransaction = await Transaction.findByIdAndUpdate(
       id,
-      { title, amount, category, description, type, date },
-      { new: true } // Return the updated document
+      { title, amount, category, description, type, date, userId },
+      { new: true }
     );
 
     if (!updatedTransaction) {
@@ -82,9 +128,48 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-router.get('/:filter', async (req, res) => {
-  const { filter } = req.params;
+// Add this route to handle transaction reset in the backend
+router.post('/reset', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1]; // Get the token from the header
 
+  if (!token) {
+    return res.status(400).json({ msg: 'No token provided' });
+  }
+
+  try {
+    // Assuming you have a way to decode the token to get the user info
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id; // User ID from the token
+
+    // Reset all transactions for this user
+    await Transaction.deleteMany({ userId }); // Assuming the Transaction model has a userId field
+
+    res.status(200).json({ msg: 'Transactions reset successfully' });
+  } catch (error) {
+    console.error('Error resetting transactions:', error);
+    res.status(500).json({ msg: 'Server error while resetting transactions' });
+  }
+});
+
+
+// Delete all transactions for a user when they log in as a new user
+router.post('/reset', async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    // Delete all transactions for the current user
+    await Transaction.deleteMany({ userId });
+
+    res.json({ msg: 'All transactions have been reset for this user' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Server error while resetting transactions' });
+  }
+});
+
+// Get transactions for a specific filter
+router.get('/:filter', async (req, res) => {
+  const { filter, userId } = req.params; // Include userId to filter by user
   const today = new Date();
   let startDate;
 
@@ -107,6 +192,7 @@ router.get('/:filter', async (req, res) => {
 
   try {
     const transactions = await Transaction.find({
+      userId,
       date: { $gte: startDate },
     }).sort({ date: -1 });
 
@@ -116,6 +202,5 @@ router.get('/:filter', async (req, res) => {
     res.status(500).json({ msg: 'Server error while fetching transactions' });
   }
 });
-
 
 module.exports = router;
