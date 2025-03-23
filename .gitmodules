@@ -1,0 +1,3 @@
+[submodule "expensetrackerfrontend"]
+	path = expensetrackerfrontend
+	url = https://github.com/gauri0728/expensetrackerfrontend.git
