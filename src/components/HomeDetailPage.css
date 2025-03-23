@@ -1,0 +1,51 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto; /* Allow height to adjust based on content */
+    position: relative; /* Position relative for absolute positioning of text */
+  }
+  
+  .hero-text {
+    position: absolute; /* Position text over the image */
+    z-index: 2; /* Ensure text is above the image */
+    color: white;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1.5rem;
+  }
+  
+  .login-button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    border: none;
+    background-color: #fff; /* White button */
+    color: #4a90e2; /* Text color */
+  }
+  
+  .login-button:hover {
+    background-color: #e0e0e0; /* Light grey on hover */
+  }
+  
+  .animated-image {
+    width: 100%; /* Full width of the container */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  /* Optional styles to add a max-height for better control on larger screens */
+  @media (min-width: 768px) {
+      .animated-image {
+          max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+          object-fit: cover; /* Ensures the image covers the area without distortion */
+      }
+  }
+  

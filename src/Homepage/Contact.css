@@ -1,0 +1,8 @@
+.container {
+  /* max-width: 600px; */
+  height: 645px;
+}
+
+form {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

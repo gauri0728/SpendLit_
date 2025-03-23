@@ -1,0 +1,123 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Layout Styles */
+  body {
+    font-family: 'Roboto', sans-serif; /* Use Google Fonts for better typography */
+    background-color: #f4f4f4;
+    color: #333;
+  }
+/*    */
+
+/* General Styles */
+.dashboard {
+  padding: 20px;
+  background: linear-gradient(to right, #ffffff, #f8f9fa);
+  min-height: 100vh;
+}
+
+/* Filter Section */
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  background: #000;
+  padding: 15px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.filter-container select {
+  padding: 6px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.filter-container button {
+  background-color: #006400;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: 0.3s ease-in-out;
+}
+
+.filter-container button:hover {
+  background-color: #004d00;
+}
+
+/* Summary Section */
+.summary-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.summary-card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  font-weight: bold;
+}
+
+.summary-card h5 {
+  color: #006400;
+  font-size: 1.2rem;
+}
+
+/* Progress Bars */
+.progress-item {
+  margin-bottom: 10px;
+}
+
+.progress-item span {
+  font-weight: bold;
+}
+
+/* Table Styling */
+.table-container {
+  margin-top: 20px;
+}
+
+.table-container h3 {
+  text-align: center;
+  color: #006400;
+  font-weight: bold;
+}
+
+.table {
+  background: black;
+  color: white;
+}
+
+.table th {
+  background: #006400;
+  color: white;
+}
+
+.table tbody tr:hover {
+  background: rgba(0, 100, 0, 0.2);
+  cursor: pointer;
+}
+
+/* Pagination */
+.pagination .page-item .page-link {
+  background: #006400;
+  color: white;
+  border: none;
+  margin: 0 3px;
+}
+
+.pagination .page-item.active .page-link {
+  background: black;
+  color: white;
+}

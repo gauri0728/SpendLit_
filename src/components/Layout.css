@@ -1,0 +1,82 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #4a90e2, #9013fe);
+    color: white;
+    position: relative;
+  }
+  
+  .logo {
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+  }
+  
+  nav ul li {
+    margin-left: 20px;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+  
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .logout-button {
+    background-color: #ff4d4d; /* Red for logout */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #ff1a1a; /* Darker red on hover */
+  }
+  
+  .footer {
+    text-align: center;
+    padding: 20px;
+    /* background-color: #333; Dark background for footer */
+    color: white;
+    background: linear-gradient(135deg, #4a90e2, #9013fe);
+  }
+  
+  .footer ul {
+    list-style-type: none;
+  }
+  
+  .footer ul li {
+    display: inline-block; /* Align items horizontally */
+    margin-left: 15px;
+  }
+  
+  .footer a {
+    color: white; /* White links in footer */
+  }
+
+  .logout-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .logout-button:hover {
+    background-color: darkred;
+  }
+  
+  
