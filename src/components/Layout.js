@@ -74,6 +74,7 @@ const Layout = ({ children }) => {
         </nav>
       )}
 
+
       {/* Main Content */}
       <main style={styles.mainContent}>{children}</main>
 
