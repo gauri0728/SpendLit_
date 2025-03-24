@@ -1,54 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../context/AuthContext';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 
 const Layout = ({ children }) => {
   const { logout } = useAuthContext();
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    console.log("Stored token from localStorage:", storedToken);
+    const storedToken = localStorage.getItem("token");
     setToken(storedToken);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem("token");
     setToken(null);
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.layout}>
       {/* Navbar */}
-      <header style={styles.header}>
-        <div style={styles.logo} onClick={() => navigate('/dashboard')}>
-        SpendLit
+      <header style={styles.navbar}>
+        <div style={styles.logo} onClick={() => navigate("/dashboard")}>
+          SpendLit
         </div>
-        <nav>
-          <ul style={styles.navList}>
-            <li><a href="/dashboard" style={styles.navLink}>Home</a></li>
-            <li><a href="/category-transaction" style={styles.navLink}>Category</a></li>
-            <li><a href="/add-transaction" style={styles.navLink}>Add Transaction</a></li>
-            <li><a href="/Finance" style={styles.navLink}>Add Finance</a></li>
-            <li><a href="/income" style={styles.navLink}>Add Income</a></li>
-            <li><a href="/contact" style={styles.navLink}>Contact Us</a></li>
 
-            {/* Conditional Authentication Buttons */}
+        {/* Desktop Navigation */}
+        <nav style={styles.desktopNav}>
+          <ul style={styles.navList}>
+            <li><span onClick={() => navigate("/dashboard")} style={styles.navItem}>Home</span></li>
+            <li><span onClick={() => navigate("/category-transaction")} style={styles.navItem}>Category</span></li>
+            <li><span onClick={() => navigate("/add-transaction")} style={styles.navItem}>Add Transaction</span></li>
+            <li><span onClick={() => navigate("/Finance")} style={styles.navItem}>Add Finance</span></li>
+            <li><span onClick={() => navigate("/income")} style={styles.navItem}>Add Income</span></li>
+            <li><span onClick={() => navigate("/contact")} style={styles.navItem}>Contact Us</span></li>
             {token ? (
               <li>
-                <button onClick={handleLogout} style={styles.logoutButton}>
-                  Logout
-                </button>
+                <button onClick={handleLogout} style={styles.logoutButton}>Logout</button>
               </li>
             ) : (
-              <li><a href="/login" style={styles.navLink}>Login</a></li>
+              <li><span onClick={() => navigate("/login")} style={styles.navItem}>Login</span></li>
             )}
           </ul>
         </nav>
+
+        {/* Mobile Menu Button */}
+        <button style={styles.mobileMenuButton} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          ☰
+        </button>
       </header>
+
+      {/* Mobile Navigation (Collapsible) */}
+      {isMobileMenuOpen && (
+        <nav style={styles.mobileNav}>
+          <ul style={styles.mobileNavList}>
+            <li><span onClick={() => { navigate("/dashboard"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Home</span></li>
+            <li><span onClick={() => { navigate("/category-transaction"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Category</span></li>
+            <li><span onClick={() => { navigate("/add-transaction"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Add Transaction</span></li>
+            <li><span onClick={() => { navigate("/Finance"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Add Finance</span></li>
+            <li><span onClick={() => { navigate("/income"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Add Income</span></li>
+            <li><span onClick={() => { navigate("/contact"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Contact Us</span></li>
+            {token ? (
+              <li>
+                <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} style={styles.logoutButton}>Logout</button>
+              </li>
+            ) : (
+              <li><span onClick={() => { navigate("/login"); setIsMobileMenuOpen(false); }} style={styles.navItem}>Login</span></li>
+            )}
+          </ul>
+        </nav>
+      )}
 
       {/* Main Content */}
       <main style={styles.mainContent}>{children}</main>
@@ -57,24 +81,21 @@ const Layout = ({ children }) => {
       <footer style={styles.footer}>
         <p>&copy; 2024 SpendLit. All rights reserved.</p>
         <ul style={styles.footerLinks}>
-          <li><a href="/privacy" style={styles.footerLink}>Privacy Policy</a></li>
-          <li><a href="/terms" style={styles.footerLink}>Terms & Conditions</a></li>
+          <li><span onClick={() => navigate("/privacy")} style={styles.footerLink}>Privacy Policy</span></li>
+          <li><span onClick={() => navigate("/terms")} style={styles.footerLink}>Terms & Conditions</span></li>
         </ul>
       </footer>
     </div>
   );
 };
 
-// Internal CSS Styles
 const styles = {
-  container: {
+  layout: {
     fontFamily: "'Poppins', sans-serif",
     color: "#333",
-    backgroundColor: "white", // 60% White background
+    backgroundColor: "white",
   },
-
-  /* Header (Navbar) */
-  header: {
+  navbar: {
     position: "sticky",
     top: 0,
     width: "100%",
@@ -86,38 +107,33 @@ const styles = {
     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
     zIndex: 1000,
   },
-
   logo: {
     fontSize: "1.8rem",
     fontWeight: "bold",
-    color: "darkgreen", // Accent color
+    color: "darkgreen",
     cursor: "pointer",
   },
-
-  navList: {
+  desktopNav: {
     display: "flex",
-    listStyle: "none",
-    gap: "20px",
-    margin: 0,
-    padding: 0,
   },
-
-  navLink: {
+  navList: {
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: "20px",
+  },
+  navItem: {
     textDecoration: "none",
     color: "black",
     fontSize: "1rem",
-    fontWeight: "500",
+    fontWeight: 500,
     padding: "10px 15px",
     borderRadius: "8px",
     transition: "all 0.3s ease",
+    cursor: "pointer",
   },
-
-  navLinkHover: {
-    backgroundColor: "darkgreen",
-    color: "white",
-  },
-
-  /* Logout Button */
   logoutButton: {
     padding: "10px 15px",
     fontSize: "1rem",
@@ -129,26 +145,45 @@ const styles = {
     cursor: "pointer",
     transition: "all 0.3s ease",
   },
-
-  logoutButtonHover: {
-    backgroundColor: "green",
-    boxShadow: "0px 0px 10px rgba(0, 100, 0, 0.5)",
+  mobileMenuButton: {
+    display: "none",
+    fontSize: "1.5rem",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    color: "black",
   },
-
-  /* Main Content */
+  mobileNav: {
+    position: "absolute",
+    top: "60px",
+    left: 0,
+    width: "100%",
+    backgroundColor: "white",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+    padding: "10px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  mobileNavList: {
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+  },
   mainContent: {
     padding: "20px",
-    minHeight: "calc(100vh - 140px)", // Keeps content centered
+    minHeight: "calc(100vh - 140px)",
   },
-
-  /* Footer */
   footer: {
-    backgroundColor: "black", // 30% Black background
+    backgroundColor: "black",
     color: "white",
     padding: "20px",
     textAlign: "center",
   },
-
   footerLinks: {
     listStyle: "none",
     display: "flex",
@@ -156,17 +191,16 @@ const styles = {
     gap: "15px",
     marginTop: "10px",
   },
-
   footerLink: {
     textDecoration: "none",
-    color: "white", // Accent color
+    color: "white",
     fontSize: "0.9rem",
     transition: "color 0.3s ease",
-  },
-
-  footerLinkHover: {
-    color: "lightgray",
+    cursor: "pointer",
   },
 };
+
+/* Responsive Styles */
+window.innerWidth < 768 && (styles.desktopNav.display = "none", styles.mobileMenuButton.display = "block");
 
 export default Layout;
