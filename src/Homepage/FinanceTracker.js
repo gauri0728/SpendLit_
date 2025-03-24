@@ -4,6 +4,7 @@ import { Modal, Form, Button, Card, Container, Row, Col } from "react-bootstrap"
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import Layout from "../components/Layout";
+import { useNavigate } from 'react-router-dom';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,6 +13,14 @@ const FinanceTracker = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [formValue, setFormValue] = useState("");
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+      }
+    }, [navigate]);
 
   const fetchFinanceData = async () => {
     try {
