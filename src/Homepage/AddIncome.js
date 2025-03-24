@@ -3,11 +3,20 @@ import axios from 'axios';
 import { Table, Button, Form, Row, Col, Container, Card } from 'react-bootstrap';
 import { FaEdit, FaTrashAlt, FaMoneyBillWave, FaCalendarAlt } from 'react-icons/fa';
 import Layout from '../components/Layout';
+import { useNavigate } from 'react-router-dom';
 
 const AddIncome = () => {
   const [income, setIncome] = useState([]);
   const [newIncome, setNewIncome] = useState({ source: '', amount: '', date: '' });
   const [isEditingIncome, setIsEditingIncome] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   // ✅ Fetch Income Data from Backend
   const fetchIncome = async () => {
