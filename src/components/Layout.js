@@ -165,6 +165,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    zIndex: 1100,
   },
   mobileNavList: {
     listStyle: "none",
